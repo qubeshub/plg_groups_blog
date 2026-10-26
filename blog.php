@@ -1077,6 +1077,15 @@ class plgGroupsBlog extends \Qubeshub\Plugin\Plugin
 			return;
 		}
 
+		// Require POST to prevent accidental deletion by crawlers
+		if (Request::method() !== 'POST')
+		{
+			App::abort(405, Lang::txt('PLG_GROUPS_BLOG_ERROR_METHOD_NOT_ALLOWED'));
+		}
+
+		// Check for request forgeries
+		Request::checkToken();
+
 		if ($this->group->published != 1)
 		{
 			$this->setError(Lang::txt('PLG_GROUPS_BLOG_ERROR_PERMISSION_DENIED'));
